@@ -21,6 +21,10 @@ namespace UsingWebAPIWithEF6.Controllers
         private UsingWebAPIWithEF6Context db = new UsingWebAPIWithEF6Context();
 
         // GET: api/Books
+        /// <summary>
+        /// 获取所有书籍
+        /// </summary>
+        /// <returns></returns>
        [HttpGet]
         public async Task<IHttpActionResult> GetBooks( )
         {
@@ -46,7 +50,11 @@ namespace UsingWebAPIWithEF6.Controllers
             }
             return Ok(bookMap);
         }
-
+        /// <summary>
+        /// 获取指定书籍
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: api/Books/5
         [ResponseType(typeof(BookDetailDto))]
         public async Task<IHttpActionResult> GetBook(int id)
@@ -69,7 +77,12 @@ namespace UsingWebAPIWithEF6.Controllers
             }
             return Ok(book);
         }
-
+        /// <summary>
+        /// 修改指定书籍
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="book"></param>
+        /// <returns></returns>
         // PUT: api/Books/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutBook(int id, Book book)
@@ -106,6 +119,11 @@ namespace UsingWebAPIWithEF6.Controllers
         }
 
         // POST: api/Books
+        /// <summary>
+        /// 增加书籍
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
         [HttpPost]
         [ResponseType(typeof(Book))]
         public async Task<IHttpActionResult> PostBook([FromBody]Book book)
@@ -129,6 +147,11 @@ namespace UsingWebAPIWithEF6.Controllers
         }
 
         // DELETE: api/Books/5
+        /// <summary>
+        /// 删除指定书籍
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [ResponseType(typeof(Book))]
         public async Task<IHttpActionResult> DeleteBook(int id)
         {
