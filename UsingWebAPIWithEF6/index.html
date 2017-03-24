@@ -1,0 +1,125 @@
+﻿<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+</head>
+
+<body>
+
+    <div ng-app="myApp" ng-controller="siteCtrl" class="container">
+        <table class="table table-hover table-bordered">
+            <tr>
+                <td>ID</td>
+                <td>标题</td>
+                <td>作者</td>
+            </tr>
+            <tr ng-repeat="list in dataList">
+                <td>{{list.Id}}</td>
+                <td>{{list.Title}}</td>
+                <td>{{list.AuthorName}}</td>
+                <td><button class="btn btn-success" ng-click="showDetailes($index)">详细</button><button class="btn btn-primary" ng-click="updateInfo($index)">修改</button><button class="btn btn-danger">删除</button></td>
+            </tr>
+        </table>
+
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">图书详情</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+
+                            <div class="form-group">
+                                <label for="">标题</label>
+                                <input type="text" class="form-control" id="" placeholder="" ng-disabled="NotEdit" ng-init="NotEdit=true" ng-model="Detail.Title">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">作者</label>
+                                <input type="text" class="form-control" id="" placeholder="" ng-disabled="NotEdit" ng-model="Detail.Author.Name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">出版日期</label>
+                                <input type="text" class="form-control" id="" placeholder="" ng-disabled="NotEdit" ng-model="Detail.Year">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">价格</label>
+                                <input type="text" class="form-control" id="" placeholder="" ng-disabled="NotEdit" ng-model="Detail.Price">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">分类</label>
+                                <input type="text" class="form-control" id="" placeholder="" ng-disabled="NotEdit" ng-model="Detail.Genre">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-success" ng-show="!NotEdit" ng-click="save()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        
+    </div>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('siteCtrl', function($scope,$http) {
+            $http.get("/api/books").success(function (response)
+            {
+                $scope.dataList = response;
+            });
+            //详情
+            $scope.showDetailes = function (index) {
+                 $scope.selectItem = $scope.dataList[index].Id
+                $http.get("/api/books/"+$scope.selectItem).success(function (response) {
+                    $scope.Detail = response;
+                    $('#exampleModal').modal({
+                        keyboard: false
+                    })
+                    $scope.showModal = true;
+                });
+            }
+            //显示修改
+            $scope.updateInfo = function (index) {
+                $scope.selectItem = $scope.dataList[index].Id
+                $http.get("/api/books/" + $scope.selectItem).success(function (response) {
+                    $scope.Detail = response;
+                    $('#exampleModal').modal({
+                        keyboard: false
+                    })
+                });
+                $scope.NotEdit = false;
+            }
+            //保存
+            $scope.save = function () {
+                $http({
+                    method:"PUT",
+                    url: "/api/books/"+$scope.selectItem,
+                    data:$scope.Detail,
+                }).success(function (response) {
+                    console.log(response);
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
