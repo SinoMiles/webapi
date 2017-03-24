@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using System.Web.Http.Cors;
 
 namespace UsingWebAPIWithEF6
 {
@@ -19,6 +20,9 @@ namespace UsingWebAPIWithEF6
 
             // Web API 路由
             config.MapHttpAttributeRoutes();
+            
+            //增加跨域支持
+            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
